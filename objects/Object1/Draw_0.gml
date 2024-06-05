@@ -32,70 +32,80 @@ var normal_y = 0
 var hit_time = 1
 var did_hit = false
 
-if show_diffs
-{
+// ray clipping
+begin
 	var r = shape.radius
-	draw_set_colour(c_dkgrey)
-	draw_set_alpha(0.25)
-	draw_rect_diamond_diff(collider, shape, false)
+	
 	var x0 = collider.x0
 	var y0 = collider.y0
 	var x1 = collider.x1
 	var y1 = collider.y1
+	//var gx0 = x0-r
+	//var gy0 = y0-r
+	//var gx1 = x1+r
+	//var gy1 = y1+r
 	
-	draw_primitive_begin(pr_linelist)
-
-	var gx0 = x0-r
-	var gy0 = y0-r
-	var gx1 = x1+r
-	var gy1 = y1+r
-	draw_vertex(gx0, 0)
-	draw_vertex(gx0, room_height)
-	draw_vertex(gx1, 0)
-	draw_vertex(gx1, room_height)
+	begin
+		draw_primitive_begin(pr_linelist)
+		draw_set_colour(c_dkgrey)
+		draw_set_alpha(0.25)
+		var gx0 = x0-r
+		var gy0 = y0-r
+		var gx1 = x1+r
+		var gy1 = y1+r
+		draw_vertex(gx0, 0)
+		draw_vertex(gx0, room_height)
+		draw_vertex(gx1, 0)
+		draw_vertex(gx1, room_height)
 	
-	draw_vertex(0, gy0)
-	draw_vertex(room_width, gy0)
-	draw_vertex(0, gy1)
-	draw_vertex(room_width, gy1)
+		draw_vertex(0, gy0)
+		draw_vertex(room_width, gy0)
+		draw_vertex(0, gy1)
+		draw_vertex(room_width, gy1)
 		
-	var cr = 512
+		var cr = 512
 
-	draw_set_colour(c_dkgrey)
-	draw_set_alpha(0.75)
-	draw_vertex(gx0-cr, y0+cr)
-	draw_vertex(x0+cr, gy0-cr)
-	draw_vertex(gx1-cr, y0-cr)
-	draw_vertex(x1+cr, gy0+cr)
+		draw_set_colour(c_dkgrey)
+		draw_set_alpha(0.75)
+		draw_vertex(gx0-cr, y0+cr)
+		draw_vertex(x0+cr, gy0-cr)
+		draw_vertex(gx1-cr, y0-cr)
+		draw_vertex(x1+cr, gy0+cr)
 
-	draw_vertex(gx0-cr, y1-cr)
-	draw_vertex(x0+cr, gy1+cr)
-	draw_vertex(gx1-cr, y1+cr)
-	draw_vertex(x1+cr, gy1-cr)
+		draw_vertex(gx0-cr, y1-cr)
+		draw_vertex(x0+cr, gy1+cr)
+		draw_vertex(gx1-cr, y1+cr)
+		draw_vertex(x1+cr, gy1-cr)
 
-	draw_vertex(x0, 0)
-	draw_vertex(x0, room_height)
-	draw_vertex(x1, 0)
-	draw_vertex(x1, room_height)
+		draw_vertex(x0, 0)
+		draw_vertex(x0, room_height)
+		draw_vertex(x1, 0)
+		draw_vertex(x1, room_height)
 	
-	draw_vertex(0, y0)
-	draw_vertex(room_width, y0)
-	draw_vertex(0, y1)
-	draw_vertex(room_width, y1)
+		draw_vertex(0, y0)
+		draw_vertex(room_width, y0)
+		draw_vertex(0, y1)
+		draw_vertex(room_width, y1)
 	
-	draw_set_colour(c_white)
-	draw_set_alpha(0.5)
+		draw_set_colour(c_white)
+		draw_set_alpha(0.5)
+		var hw = (x1-x0)*0.5
+		var hh = (y1-y0)*0.5
+		var cx = x0+hw
+		var cy = y0+hh
+	
+		draw_vertex(cx, 0)
+		draw_vertex(cx, room_height)
+		draw_vertex(0, cy)
+		draw_vertex(room_width, cy)
+	
+		draw_primitive_end()
+	end
+	
 	var hw = (x1-x0)*0.5
 	var hh = (y1-y0)*0.5
 	var cx = x0+hw
 	var cy = y0+hh
-	
-	draw_vertex(cx, 0)
-	draw_vertex(cx, room_height)
-	draw_vertex(0, cy)
-	draw_vertex(room_width, cy)
-	
-	draw_primitive_end()
 	
 	var relx = ox-cx
 	var rely = oy-cy
@@ -104,23 +114,17 @@ if show_diffs
 	relx = abs(relx)
 	rely = abs(rely)
 	
-	var absgx = abs(gx-cx)
-	var absgy = abs(gy-cy)
+	//var absgx = abs(gx-cx)
+	//var absgy = abs(gy-cy)
 	var reldestx = relx+dx*quadx
 	var reldesty = rely+dy*quady
 	
 	var origin_behind_slope = relx-hw+rely-hh <= r
-	
-	//draw_set_colour((reldestx-hw+reldesty-hh) <= r ? c_green : c_grey)
-	draw_set_colour(c_grey)
-	draw_set_alpha(0.75)
-	draw_circle(absgx+cx, absgy+cy, 8, true)
-	
-	draw_set_alpha(0.25)
-	draw_primitive_begin(pr_trianglelist)
-	
+
 	var clip_mode = CLIP_NONE
 	
+	//var fuck = relx-hw-hh-rely
+	//draw_arrow(hw+cx, -hh+cy, hw+cx, -hh+cy-fuck, 16)
 	
 	// origin is in r4, r5, r2, r3, r9, or r0
 	if origin_behind_slope
@@ -135,16 +139,12 @@ if show_diffs
 			// far vertex
 			var dp2 = dot_product(dxreal, dyreal, hh+r-rely, -(-hw-relx))
 			// if the endpoint is above the bounds of the inflated box, no intersection is possible
-			var collision_possible = rely+dyreal <= hh+r and dp1 < 0 and dp2 < 0
+			var collision_possible = reldesty <= hh+r and dp1 < 0 and dp2 < 0
 
 			if collision_possible
 			{
 				clip_mode = CLIP_V
 			}
-			draw_set_colour(collision_possible ? c_green : c_orange)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx, hh+cy+r)
-			draw_vertex(-hw+cx, hh+cy+r)
 		}
 		// origin is in r5
 		else if rely <= hh and relx > hw + r
@@ -156,16 +156,12 @@ if show_diffs
 			// far vertex
 			var dp2 = dot_product(dxreal, dyreal, -(-hh-rely), hw+r-relx)
 			// if the endpoint is above the bounds of the inflated box, no intersection is possible
-			var collision_possible = relx+dxreal <= hw+r and dp1 < 0 and dp2 < 0
+			var collision_possible = reldestx <= hw+r and dp1 < 0 and dp2 < 0
 
 			if collision_possible
 			{
 				clip_mode = CLIP_H
 			}
-			draw_set_colour(collision_possible ? c_green : c_orange)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx+r, hh+cy)
-			draw_vertex(hw+cx+r, -hh+cy)
 		}
 		// the rest of the regions are ignored
 	}
@@ -183,7 +179,7 @@ if show_diffs
 			// far vertex
 			var dpf = dot_product(dxreal, dyreal, hh+r-rely, -(-hw-relx))
 			
-			collision_possible = rely+dyreal <= hh+r and (dph >= 0 and dpf <= 0)
+			collision_possible = (reldesty <= hh+r) and (reldestx-hw+reldesty-hh <= r) and (dph >= 0 and dpf <= 0)
 			
 			if collision_possible
 			{
@@ -197,22 +193,6 @@ if show_diffs
 					clip_mode = CLIP_V
 				}
 			}
-			
-			//dbtext = string_join("\n",
-			//	$"{collision_possible ? "TRUE" : "FALSE"}",
-			//	$"{dph}",
-			//	$"{dpf}",
-			//)
-			
-			draw_set_colour(c_yellow)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx, hh+cy+r)
-			draw_vertex(-hw+cx, hh+cy+r)
-
-			draw_set_alpha(0.15)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx+r, hh+cy)
-			draw_vertex(hw+cx, hh+cy+r)
 		}
 		// origin is in r7
 		else if rely < hh+r
@@ -224,7 +204,7 @@ if show_diffs
 			// far vertex
 			var dpf = dot_product(dxreal, dyreal, -(-hh-rely), hw+r-relx)
 			
-			collision_possible = (relx+dxreal <= hw+r) and (dpv >= 0 and dpf <= 0)
+			collision_possible = (reldestx <= hw+r) and (reldestx-hw+reldesty-hh <= r) and (dpv >= 0)// and dpf <= 0)
 			
 			if collision_possible
 			{
@@ -235,19 +215,27 @@ if show_diffs
 				}
 				else
 				{
-					clip_mode = CLIP_H
+					// FIXME: this is a jank hack. this area should be considered its own region
+					// origin is in the "sub region" r7-1 and the ray is in the opposing corner's cone
+					// technically, its checking that its *not* in the far vertex's cone
+					if relx-hw-hh-rely >= r and dpf > 0
+					{
+						clip_mode = CLIP_CORNER
+						dbtext = "CONE"
+					}
+					else
+					{
+						clip_mode = CLIP_H
+					}
 				}
 			}
 			
-			draw_set_colour(c_red)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx+r, hh+cy)
-			draw_vertex(hw+cx+r, -hh+cy)
-			
-			draw_set_alpha(0.15)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx+r, hh+cy)
-			draw_vertex(hw+cx, hh+cy+r)
+			dbtext = string_join("\n",
+				dbtext,
+				$"v {dpv}",
+				$"f {dpf}",
+				$"op {relx-hw-hh-rely >= r}",
+			)
 		}
 		// origin is in r8
 		else
@@ -264,11 +252,6 @@ if show_diffs
 					(reldestx<=hw+r and reldesty<=hh+r) and
 					(reldestx-hw+reldesty-hh <= r)
 				) and(dph <= 0 and dpv <= 0)
-			)
-			
-			dbtext = string_join("\n",
-				$"{reldestx<=hw+r}",
-				$"{reldesty<=hh+r}",
 			)
 			
 			if collision_possible
@@ -288,18 +271,6 @@ if show_diffs
 					clip_mode = CLIP_CORNER
 				}
 			}
-			
-			draw_set_colour(c_fuchsia)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx, hh+cy+r)
-			draw_vertex(-hw+cx, hh+cy+r)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx+r, hh+cy)
-			draw_vertex(hw+cx+r, -hh+cy)
-			draw_set_alpha(0.15)
-			draw_vertex(relx+cx, rely+cy)
-			draw_vertex(hw+cx+r, hh+cy)
-			draw_vertex(hw+cx, hh+cy+r)
 		}
 	}
 	// origin is in R1
@@ -365,20 +336,24 @@ if show_diffs
 			break
 		}
 	}
-	
-	
-	draw_primitive_end()
+end
+
+if show_diffs
+{
+	draw_set_colour(c_dkgrey)
+	draw_set_alpha(0.25)
+	draw_rect_diamond_diff(collider, shape, false)
 	
 	//draw_set_alpha(0.25)
 	draw_set_alpha(0.5)
 	
-	draw_arrow(
-		relx+cx,
-		rely+cy,
-		reldestx+cx,
-		reldesty+cy,
-		16
-	)
+	//draw_arrow(
+	//	relx+cx,
+	//	rely+cy,
+	//	reldestx+cx,
+	//	reldesty+cy,
+	//	16
+	//)
 	
 	draw_set_colour(c_dkgrey)
 	draw_set_alpha(0.75)

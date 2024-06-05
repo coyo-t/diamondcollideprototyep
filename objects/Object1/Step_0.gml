@@ -20,6 +20,28 @@ if keyboard_check(ord("Q"))
 	shade_fac = clamp((mouse_x - 32) / (room_width - 64), 0, 1)
 	altering_fac = true
 }
+else if keyboard_check(vk_space) and keyboard_check(vk_backspace)
+{
+	direct.x = room_width
+	direct.y = room_height
+	origin.x = mouse_x
+	origin.y = mouse_y
+}
+else if keyboard_check(vk_space)
+{
+	direct.x = 0
+	direct.y = room_height
+	origin.x = mouse_x
+	origin.y = 0
+}
+else if keyboard_check(vk_backspace)
+{
+	direct.x = room_width
+	direct.y = 0
+	origin.x = 0
+	origin.y = mouse_y
+}
+
 else if ctrldown or shiftdown
 {
 	var dx = window_mouse_get_delta_x()
