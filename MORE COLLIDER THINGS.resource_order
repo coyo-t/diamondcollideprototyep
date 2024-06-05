@@ -1,0 +1,11 @@
+{
+  "FolderOrderSettings":[],
+  "ResourceOrderSettings":[
+    {"name":"obj_collider","order":18,"path":"objects/obj_collider/obj_collider.yy",},
+    {"name":"Object1","order":16,"path":"objects/Object1/Object1.yy",},
+    {"name":"Room1","order":15,"path":"rooms/Room1/Room1.yy",},
+    {"name":"scr_draw_shit","order":20,"path":"scripts/scr_draw_shit/scr_draw_shit.yy",},
+    {"name":"scr_shapes","order":17,"path":"scripts/scr_shapes/scr_shapes.yy",},
+    {"name":"Sprite1","order":19,"path":"sprites/Sprite1/Sprite1.yy",},
+  ],
+}
