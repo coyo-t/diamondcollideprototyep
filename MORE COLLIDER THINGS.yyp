@@ -21,6 +21,7 @@
     {"id":{"name":"obj_collider","path":"objects/obj_collider/obj_collider.yy",},},
     {"id":{"name":"Object1","path":"objects/Object1/Object1.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"scr_debug_sh","path":"scripts/scr_debug_sh/scr_debug_sh.yy",},},
     {"id":{"name":"scr_draw_shit","path":"scripts/scr_draw_shit/scr_draw_shit.yy",},},
     {"id":{"name":"scr_shapes","path":"scripts/scr_shapes/scr_shapes.yy",},},
     {"id":{"name":"Sprite1","path":"sprites/Sprite1/Sprite1.yy",},},

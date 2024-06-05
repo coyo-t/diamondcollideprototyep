@@ -8,7 +8,7 @@ SHOW_FLAGS = SHOW_DIFFS
 var r = new Rect(0,0,1,1)
 collider = r
 
-shape = new Circle(0, 0, 48)
+shape = new Circle(0, 0, 128)
 
 origin = shape.co
 direct = new Vec(1, 1)
