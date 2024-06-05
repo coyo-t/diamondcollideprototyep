@@ -8,6 +8,9 @@ function draw_empty (x, y, rx, ry=rx)
 	draw_primitive_end()
 }
 
+///@arg {Struct.Rect} rect
+///@arg {Struct.Circle} circle
+///@arg {Bool} outline
 function draw_rect_diamond_diff (rect, c, outline)
 {
 	//var cx = c.co.x
@@ -48,6 +51,10 @@ function draw_rect_diamond_diff (rect, c, outline)
 	
 }
 
+///@arg {Real} x
+///@arg {Real} y
+///@arg {Real} radius
+///@arg {Bool} outline
 function draw_diamond (_x, _y, r, outline)
 {
 	if outline
@@ -70,6 +77,11 @@ function draw_diamond (_x, _y, r, outline)
 	draw_primitive_end()
 }
 
+///@arg {Real} x0
+///@arg {Real} y0
+///@arg {Real} x1
+///@arg {Real} y1
+///@arg {Bool} outline
 function draw_rect (x0, y0, x1, y1, outline)
 {
 	if outline

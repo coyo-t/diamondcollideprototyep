@@ -5,13 +5,22 @@
 
 SHOW_FLAGS = SHOW_DIFFS
 
-var r = new Rect(0,0,1,1)
-collider = r
+///@type {Struct.Rect}
+collider = new Rect(0,0,1,1)
 
+var r = collider
+
+///@type {Struct.Circle}
 shape = new Circle(0, 0, 128)
 
+///@type {Struct.Vec}
 origin = shape.co
+
+///@type {Struct.Vec}
 direct = new Vec(1, 1)
+
+///@type {Struct.HitResult}
+hitresult = new HitResult()
 
 shade_fac = 0.5
 altering_fac = false
