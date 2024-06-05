@@ -13,6 +13,7 @@ altering_fac = false
 
 SHOW_FLAGS ^= SHOW_SHAPES * keyboard_check_pressed(ord("1"))
 SHOW_FLAGS ^= SHOW_DIFFS  * keyboard_check_pressed(ord("2"))
+SHOW_FLAGS ^= SHOW_FRAMERATE * keyboard_check_pressed(vk_f3)
 
 var mwh = mouse_wheel_down() - mouse_wheel_up()
 

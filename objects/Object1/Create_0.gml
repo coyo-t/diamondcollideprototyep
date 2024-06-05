@@ -1,9 +1,10 @@
 
 #macro SHOW_SHAPES 1
 #macro SHOW_DIFFS 2
+#macro SHOW_FRAMERATE 4
 #macro SHOW_FLAGS score
 
-SHOW_FLAGS = SHOW_DIFFS
+SHOW_FLAGS = SHOW_DIFFS | SHOW_FRAMERATE
 
 ///@type {Struct.Rect}
 collider = new Rect(0,0,1,1)
